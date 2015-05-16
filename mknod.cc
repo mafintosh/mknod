@@ -19,7 +19,12 @@ class MknodWorker : public NanAsyncWorker {
 
   void HandleOKCallback () {
     NanScope();
-    callback->Call(0, NULL);
+    if (this->error) {
+      Local<Value> tmp[] = {NanError("mknod failed")};
+      callback->Call(1, tmp);
+    } else {
+      callback->Call(0, NULL);
+    }
   }
 
  private:
