@@ -1,6 +1,6 @@
 {
   "name": "mknod",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Node bindings for mknod",
   "main": "index.js",
   "dependencies": {
