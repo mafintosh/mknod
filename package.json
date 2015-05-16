@@ -1,0 +1,22 @@
+{
+  "name": "mknod",
+  "version": "0.0.0",
+  "description": "Node bindings for mknod",
+  "main": "index.js",
+  "dependencies": {
+    "bindings": "^1.2.1",
+    "nan": "^1.8.4"
+  },
+  "devDependencies": {},
+  "gypfile": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/mknod.git"
+  },
+  "author": "Mathias Buus (@mafintosh)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafintosh/mknod/issues"
+  },
+  "homepage": "https://github.com/mafintosh/mknod"
+}
