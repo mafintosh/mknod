@@ -53,7 +53,7 @@ NAN_METHOD(Mknod) {
   stpcpy(path_alloc, *path);
 
   NanAsyncQueueWorker(new MknodWorker(new NanCallback(callback), path_alloc, mode, dev));
-
+  NanReturnUndefined();
 }
 
 void Init(Handle<Object> exports) {
@@ -61,3 +61,4 @@ void Init(Handle<Object> exports) {
 }
 
 NODE_MODULE(mknod, Init)
+
