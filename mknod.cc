@@ -6,10 +6,10 @@
 
 using namespace v8;
 
-class MknodWorker : public NanAsyncWorker {
+class MknodWorker : public Nan::AsyncWorker {
  public:
-  MknodWorker(NanCallback *callback, char *path, int mode, int dev)
-    : NanAsyncWorker(callback), path(path), mode(mode), dev(dev) {}
+  MknodWorker(Nan::Callback *callback, char *path, int mode, int dev)
+    : Nan::AsyncWorker(callback), path(path), mode(mode), dev(dev) {}
   ~MknodWorker() {}
 
   void Execute () {
@@ -18,9 +18,11 @@ class MknodWorker : public NanAsyncWorker {
   }
 
   void HandleOKCallback () {
-    NanScope();
+    Nan::HandleScope scope;
     if (this->error) {
-      Local<Value> tmp[] = {NanError("mknod failed")};
+      Local<Value> tmp[] = {
+        Nan::Error("mknod failed")
+      };
       callback->Call(1, tmp);
     } else {
       callback->Call(0, NULL);
@@ -35,30 +37,29 @@ class MknodWorker : public NanAsyncWorker {
 };
 
 NAN_METHOD(Mknod) {
-  NanScope();
+  Nan::HandleScope scope;
 
-  if (!args[0]->IsString()) return NanThrowError("path must be a string");
-  NanUtf8String path(args[0]);
+  if (!info[0]->IsString()) return Nan::ThrowError("path must be a string");
+  Nan::Utf8String path(info[0]);
 
-  if (!args[1]->IsNumber()) return NanThrowError("mode must be a number");
-  int mode = args[1]->Uint32Value();
+  if (!info[1]->IsNumber()) return Nan::ThrowError("mode must be a number");
+  int mode = info[1]->Uint32Value();
 
-  if (!args[2]->IsNumber()) return NanThrowError("dev must be a number");
-  int dev = args[2]->Uint32Value();
+  if (!info[2]->IsNumber()) return Nan::ThrowError("dev must be a number");
+  int dev = info[2]->Uint32Value();
 
-  if (!args[3]->IsFunction()) return NanThrowError("callback must be a function");
-  Local<Function> callback = args[3].As<Function>();
+  if (!info[3]->IsFunction()) return Nan::ThrowError("callback must be a function");
+  Local<Function> callback = info[3].As<Function>();
 
   char *path_alloc = (char *) malloc(1024);
   stpcpy(path_alloc, *path);
 
-  NanAsyncQueueWorker(new MknodWorker(new NanCallback(callback), path_alloc, mode, dev));
-  NanReturnUndefined();
+  Nan::AsyncQueueWorker(new MknodWorker(new Nan::Callback(callback), path_alloc, mode, dev));
 }
 
-void Init(Handle<Object> exports) {
-  exports->Set(NanNew("mknod"), NanNew<FunctionTemplate>(Mknod)->GetFunction());
+NAN_MODULE_INIT(InitAll) {
+  Nan::Set(target, Nan::New<String>("mknod").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(Mknod)).ToLocalChecked());
 }
 
-NODE_MODULE(mknod, Init)
+NODE_MODULE(mknod, InitAll)
 
