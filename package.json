@@ -4,14 +4,16 @@
   "description": "Node bindings for mknod",
   "main": "index.js",
   "dependencies": {
-    "bindings": "^1.2.1",
     "nan": "^2.0.8",
-    "prebuild": "^2.0.0"
+    "node-gyp-build": "^3.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "prebuildify": "^2.3.3"
+  },
   "scripts": {
-    "install": "prebuild --download",
-    "prebuild": "prebuild"
+    "install": "node-gyp-build",
+    "prebuild": "prebuildify --all --strip",
+    "prebuild-ia32": "prebuildify --all --strip --arch=ia32"
   },
   "gypfile": true,
   "repository": {
